@@ -1,8 +1,9 @@
 import { Link } from 'react-router';
 import { getPublicProducts } from '@/api/server/products';
 import { categories } from '@/utils/enum';
-import { useCart } from '@/context/CartContext';
 import { useBtnLoading } from '@/utils/util';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@/slices/cartSlice';
 
 const sortOptions = [
   { value: 'default', label: '預設排序' },
@@ -56,9 +57,8 @@ export const Products = () => {
       }
 
       setProducts(filteredProducts);
-      filteredProducts.length < 10
-        ? setTotalProducts(filteredProducts.length)
-        : setTotalProducts(response.data.pagination?.total_pages * pageSize);
+      // 設定數量來顯示分頁
+      setTotalProducts(response.data.pagination?.total_pages * pageSize);
     } catch (error) {
       console.error('載入產品失敗:', error);
       message.error('載入產品失敗，請稍後再試');
@@ -82,13 +82,13 @@ export const Products = () => {
     loadProducts();
   };
 
-  // 加入購物車（使用 Context）
-  const { addToCart } = useCart();
+  // 加入購物車
+  const dispatch = useDispatch();
   const handleAddToCart = async (product) => {
     await withBtnLoading(`cart_${product.id}`, async () => {
       try {
         const data = { product_id: product.id, qty: 1 };
-        await addToCart(data);
+        await dispatch(addToCart(data));
       } catch (err) {
         console.log(err);
       }

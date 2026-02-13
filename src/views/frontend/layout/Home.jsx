@@ -1,14 +1,22 @@
 import { Link, Outlet } from 'react-router';
-import { CartProvider, useCart } from '@/context/CartContext';
+import { refreshCartCount } from '@/slices/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const LayoutInner = () => {
   const [query, setQuery] = useState('');
-  const { cartCount } = useCart();
 
   const handleSearch = (e) => {
     e.preventDefault();
     setQuery('');
   };
+
+  const cartCount = useSelector((state) => state.cart.cartCount);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(refreshCartCount());
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -83,9 +91,5 @@ const LayoutInner = () => {
 };
 
 export const Layout = () => {
-  return (
-    <CartProvider>
-      <LayoutInner />
-    </CartProvider>
-  );
+  return <LayoutInner />;
 };

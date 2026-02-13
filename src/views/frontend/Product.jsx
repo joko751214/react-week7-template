@@ -1,7 +1,8 @@
 import { useParams, Link } from 'react-router';
 import { getPublicProduct } from '@/api/server/products';
-import { useCart } from '@/context/CartContext';
 import { useBtnLoading } from '@/utils/util';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@/slices/cartSlice';
 
 export const Product = () => {
   const { id } = useParams();
@@ -26,13 +27,13 @@ export const Product = () => {
     if (id) loadProduct();
   }, [id]);
 
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
   const handleAddToCart = async () => {
     if (!product) return;
     await withBtnLoading(`cart_${product.id}`, async () => {
       try {
         const data = { product_id: product.id, qty: 1 };
-        await addToCart(data);
+        await dispatch(addToCart(data));
       } catch (err) {
         console.log(err);
       }

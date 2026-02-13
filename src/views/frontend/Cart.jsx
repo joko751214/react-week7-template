@@ -1,17 +1,18 @@
 import { Link } from 'react-router';
 import { getCartList, updateCartItem, deleteCartItem } from '@/api/server/cart';
-import { useCart } from '@/context/CartContext';
 import TipsModal from '@/component/TipsModal';
 import { useBtnLoading } from '@/utils/util';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { refreshCartCount } from '@/slices/cartSlice';
 
 export const Cart = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { btnLoading, withBtnLoading } = useBtnLoading();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { refreshCartCount } = useCart();
 
   const loadCart = async () => {
     try {
@@ -21,7 +22,7 @@ export const Cart = () => {
       } = await getCartList();
       setItems(data);
       // 同步更新 header 的購物車數量
-      refreshCartCount && refreshCartCount();
+      dispatch(refreshCartCount());
     } catch (err) {
       console.error(err);
       message.error('載入購物車失敗');

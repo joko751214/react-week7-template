@@ -37,7 +37,6 @@ export const Checkout = () => {
         data: { data },
       } = await getCartList();
       setCart(data);
-      console.log(data, 'data');
     } catch (err) {
       console.error(err);
       message.error('載入購物車失敗');
@@ -61,7 +60,6 @@ export const Checkout = () => {
         user: { ...formData },
         message: formData.message,
       };
-      console.log(params, 'params');
       await checkout({
         user: { ...formData },
         message: formData.message,

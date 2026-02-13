@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
       }),
       tailwindcss(),
     ],  
-    base: '/react-week6-template/',
+    base: '/react-week7-template/',
     server: {
       host: '0.0.0.0',
       port: 8080,
