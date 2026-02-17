@@ -36,17 +36,20 @@ export const Cart = () => {
   }, []);
 
   const changeQty = async (item, qty) => {
+    console.log(item, 'item');
     if (qty === 0) {
       return handleOpenTipsModal(item);
     }
-    try {
-      await updateCartItem(item.id, { product_id: item.product.id, qty });
-      message.success('已更新數量');
-      await loadCart();
-    } catch (err) {
-      console.error(err);
-      message.error('更新數量失敗');
-    }
+    await withBtnLoading(`cart_${item.id}`, async () => {
+      try {
+        await updateCartItem(item.id, { product_id: item.product.id, qty });
+        message.success('已更新數量');
+        await loadCart();
+      } catch (err) {
+        console.error(err);
+        message.error('更新數量失敗');
+      }
+    });
   };
 
   const [isTipsModalOpen, setIsTipsModalOpen] = useState(false);
@@ -145,15 +148,17 @@ export const Cart = () => {
                         <button
                           type="button"
                           onClick={() => changeQty(item, item.qty - 1)}
-                          className="px-3 py-1 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50"
+                          disabled={btnLoading[`cart_${item.id}`]}
+                          className="cart-btn !px-3 !py-1"
                         >
                           -
                         </button>
-                        <div className="px-2 min-w-[40px] text-center">{item.qty}</div>
+                        <div className="px-2 min-w-10 text-center">{item.qty}</div>
                         <button
                           type="button"
                           onClick={() => changeQty(item, item.qty + 1)}
-                          className="px-3 py-1 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50"
+                          disabled={btnLoading[`cart_${item.id}`]}
+                          className="cart-btn !px-3 !py-1"
                         >
                           +
                         </button>
@@ -184,7 +189,7 @@ export const Cart = () => {
 
             <button
               disabled={isCartEmpty}
-              className="mt-6 w-full cart-btn block text-center"
+              className="py-3 px-6 mt-6 w-full cart-btn block text-center"
               onClick={() => goCheckout()}
             >
               前往結帳

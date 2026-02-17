@@ -4,6 +4,7 @@ import { Products } from '../views/frontend/Products';
 import { Product } from '../views/frontend/Product';
 import { Cart } from '../views/frontend/Cart';
 import { Checkout } from '../views/frontend/Checkout';
+import { NotFound } from '../views/frontend/NotFound';
 import { Dashboard } from '../views/backend/layout/Dashboard';
 import { ManageProducts } from '../views/backend/ManageProducts';
 import { Login } from '../views/backend/Login';
@@ -33,6 +34,10 @@ export const routes = [
       {
         path: 'checkout',
         element: <Checkout />,
+      },
+      {
+        path: '*',
+        element: <NotFound />,
       },
     ],
   },
