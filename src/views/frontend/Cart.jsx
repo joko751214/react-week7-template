@@ -36,7 +36,6 @@ export const Cart = () => {
   }, []);
 
   const changeQty = async (item, qty) => {
-    console.log(item, 'item');
     if (qty === 0) {
       return handleOpenTipsModal(item);
     }
