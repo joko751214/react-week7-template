@@ -17,7 +17,7 @@ export const Login = () => {
       } = await login(values);
       message.success('登入成功');
       setTimeout(() => {
-        navigate('/admin/product');
+        navigate('/admin/product', { state: { skipAuthCheck: true } });
       }, 1000);
       if (token) {
         document.cookie = `hexschoolToken=${token}; expires=${new Date(expired)};`;

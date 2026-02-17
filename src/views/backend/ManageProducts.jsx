@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router';
 import { getProducts, editProduct, addProduct, deleteProduct } from '@/api/server/admin';
-import { checkLogin } from '@/api/server/login';
 import ProductModal from '@/component/ProductModal';
 import TipsModal from '@/component/TipsModal';
 import { useBtnLoading } from '@/utils/util';
@@ -13,18 +12,6 @@ export const ManageProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTipsModalOpen, setIsTipsModalOpen] = useState(false);
   const [deletingProductId, setDeletingProductId] = useState(null);
-
-  // 檢查是否為管理員
-  const checkAdmin = async () => {
-    try {
-      setIsLoading(true);
-      await checkLogin();
-    } catch (err) {
-      navigate('/login');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const [products, setProducts] = useState([]);
   // 取得產品列表
@@ -50,8 +37,13 @@ export const ManageProducts = () => {
     handleGetProducts(page);
   };
 
+  const handleLogout = () => {
+    document.cookie = `hexschoolToken=;expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+    message.success('已登出');
+    navigate('/login', { replace: true });
+  };
+
   useEffect(() => {
-    checkAdmin();
     handleGetProducts();
   }, []);
 
@@ -180,7 +172,10 @@ export const ManageProducts = () => {
   return (
     <>
       <div className="lg:w-5xl xl:w-7xl mx-auto">
-        <div style={{ textAlign: 'right', marginBottom: 16 }}>
+        <div className="flex items-center justify-between" style={{ marginBottom: 16 }}>
+          <Button className="mt-2" onClick={handleLogout}>
+            登出
+          </Button>
           <Button
             className="mt-2"
             type="primary"

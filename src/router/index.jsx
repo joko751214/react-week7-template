@@ -7,6 +7,7 @@ import { Checkout } from '../views/frontend/Checkout';
 import { Dashboard } from '../views/backend/layout/Dashboard';
 import { ManageProducts } from '../views/backend/ManageProducts';
 import { Login } from '../views/backend/Login';
+import { AdminGuard } from './AdminGuard';
 
 export const routes = [
   {
@@ -37,16 +38,27 @@ export const routes = [
   },
   {
     path: '/admin',
-    element: <Dashboard />,
+    element: <AdminGuard mode="admin" />,
     children: [
       {
-        path: 'product',
-        element: <ManageProducts />,
+        element: <Dashboard />,
+        children: [
+          {
+            path: 'product',
+            element: <ManageProducts />,
+          },
+        ],
       },
     ],
   },
   {
     path: '/login',
-    element: <Login />,
+    element: <AdminGuard mode="login" />,
+    children: [
+      {
+        path: '',
+        element: <Login />,
+      },
+    ],
   },
 ];
